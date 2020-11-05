@@ -5,9 +5,104 @@ orbs:
   # Declare a dependency on the welcome-orb
   welcome: circleci/welcome-orb@0.4.1
 # Orchestrate or schedule a set of jobs
+
+jobs:
+  build_frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          command: |
+            cd frontend
+            pwd
+            npm i
+            npm run build
+  build_backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          command: |
+            cd backend
+            pwd
+            npm i
+            npm run build
+  test_frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          command: |
+            mkdir /tmp/test-frontend
+            cd frontend
+            pwd
+            npm i
+            npm build
+            npm run test
+      # Upload test results
+      - store_test_results:
+          path: /tmp/test-frontend
+  test_backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          command: |
+            mkdir /tmp/test-backend
+            cd backend
+            pwd
+            npm i
+            npm build
+            npm run test
+      # Upload test results
+      - store_test_results:
+          path: /tmp/test-backend
+
+  analyze_backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          command: |
+            cd backend
+            pwd
+            npm i
+            npm build
+            npm audit fix --audit-level=critical --force
+  analyze_frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          command: |
+            cd frontend
+            pwd
+            npm i
+            npm build
+            npm audit --audit-level=critical
+
 workflows:
   # Name the workflow "welcome"
   welcome:
     # Run the welcome/run job in its own container
     jobs:
-      - welcome/run
+      - build_frontend
+      - build_backend
+      - test_backend:
+          requires:
+            - build_backend
+      - test_frontend:
+          requires:
+            - build_frontend
+      - analyze_frontend:
+          requires:
+            - test_frontend
+      - analyze_backend:
+          requires:
+            - test_backend
