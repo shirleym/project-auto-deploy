@@ -73,7 +73,7 @@ jobs:
             pwd
             npm i
             npm build
-            npm audit --audit-level=critical
+            npm audit fix --audit-level=critical --force
   analyze_frontend:
     docker:
       - image: circleci/node:13.8.0
