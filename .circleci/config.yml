@@ -97,7 +97,7 @@ jobs:
           command: |
             pwd
             ls -la
-            find / -name "*circleci*"
+            ls -la .circleci/files
             aws cloudformation deploy \
               --template-file ".circleci/files/backend.yml" \
               --tags project=udapeople \
