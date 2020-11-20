@@ -103,7 +103,6 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-              exit 1
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -112,7 +111,7 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-              exit 1
+
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -142,12 +141,12 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible
-            exit 1
+            apk add --update ansible && apk add openssh # install the dependencies needed for your playbook
+
       - run:
           name: Configure server
           command: |
-            # Your code here
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt configure-server.yml
             exit 1
       # Here's where you will add some code to rollback on failure
 
