@@ -119,11 +119,11 @@ jobs:
           command: |
             aws cloudformation \
               list-exports --query "Exports[?Name==\`backendIP\`].Value" \
-              --no-paginate --output text > ~/project/.circleci/ansible/inventory.txt
+              --no-paginate --output text > ~/cdond-c3-projectstarter/.circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - cdond-c3-projectstarter/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure
 
 
