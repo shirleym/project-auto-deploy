@@ -117,13 +117,15 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
+            pwd
+            ls -la
             aws cloudformation \
               list-exports --query "Exports[?Name==\`backendIP\`].Value" \
-              --no-paginate --output text > ~/.circleci/ansible/inventory.txt
+              --no-paginate --output text > ~/cdond-c3-projectstarter/.circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
-            - .circleci/ansible/inventory.txt
+            - cdond-c3-projectstarter/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure
 
 
