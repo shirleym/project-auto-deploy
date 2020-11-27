@@ -125,7 +125,7 @@ jobs:
             cat ~/inventory1.txt
             aws cloudformation \
               list-exports --query "Exports[?Name==\`backendIP\`].Value" \
-              --no-paginate --output text > ~/inventory1.txt
+              --no-paginate --output text >> ~/inventory1.txt
       - persist_to_workspace:
           root: ~/
           paths:
