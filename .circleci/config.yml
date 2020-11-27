@@ -154,7 +154,7 @@ jobs:
           name: Fix host authenticity for inventory
           command: |
             serverIP = sed -n 2p ~/inventory1.txt
-            ssh-keyscan $serverIP >> ~/.ssh/known_hosts
+            ssh-keyscan "$serverIP" >> ~/.ssh/known_hosts
       - run:
           name: Configure server
           command: |
