@@ -121,8 +121,8 @@ jobs:
           command: |
             pwd
             ls -la
-            echo "[web]" >>  ~/inventory.txt
-            cat ~/inventory.txt
+            echo "[web]" >>  ~/inventory1.txt
+            cat ~/inventory1.txt
             aws cloudformation \
               list-exports --query "Exports[?Name==\`backendIP\`].Value" \
               --no-paginate --output text > ~/inventory.txt
@@ -155,7 +155,7 @@ jobs:
           name: Configure server
           command: |
             cat ~/inventory.txt
-            ansible-playbook -i ~/inventory.txt ~/project/.circleci/ansible/configure-server.yml
+            ansible-playbook -i ~/inventory1.txt ~/project/.circleci/ansible/configure-server.yml
             exit 1
       # Here's where you will add some code to rollback on failure
 
