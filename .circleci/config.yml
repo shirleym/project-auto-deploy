@@ -319,3 +319,9 @@ workflows:
           requires: [test_frontend, test_backend, analyze_backend, analyze_frontend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
