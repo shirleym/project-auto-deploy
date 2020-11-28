@@ -161,10 +161,7 @@ jobs:
           command: |
             cat ~/inventory1.txt
             ansible-playbook -i ~/inventory1.txt ~/project/.circleci/ansible/configure-server.yml
-      # Here's where you will add some code to rollback on failure
-            exit 1
-
-
+      
 workflows:
   # Name the workflow "welcome"
   welcome:
