@@ -8,6 +8,36 @@ orbs:
   welcome: circleci/welcome-orb@0.4.1
 # Orchestrate or schedule a set of jobs
 
+commands:
+  destroy-environment:
+    description: Destroy backend and frontend cloudformation stacks given a workflow ID.
+    parameters:
+      workflow_id:
+        type: string
+    steps:
+      - run:
+          name: Destroy environment << parameters.workflow_id >>
+          command: |
+            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.workflow_id >>
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflow_id >>
+            aws s3 rb s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --force
+          when: on_fail
+
+  revert-migrations:
+    description: Revert the last migration if successfully run in the current workflow.
+    steps:
+      - run:
+          name: Revert migrations
+          command: |
+            success_migration=$(curl -H "token: 31b97803-fd3d-4659-b2ec-e9c0af61db39" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            if ((success_migrations == 1));
+            then
+              cd backend
+              npm install
+              npm run migrations:revert
+            fi
+          when: on_fail
+
 jobs:
   build_frontend:
     docker:
@@ -161,7 +191,111 @@ jobs:
           command: |
             cat ~/inventory1.txt
             ansible-playbook -i ~/inventory1.txt ~/project/.circleci/ansible/configure-server.yml
-      
+
+  run-migrations:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      # Checkout code from git
+      - run:
+          name: Run migrations
+          command: |
+            # Your code here
+            cd backend
+            npm install
+            npm i
+            npm audit fix --audit-level=critical --force
+            npm run migrations > migrations.txt
+            cat migrations.txt
+
+      - run:
+          name: Send migration results to memstash
+          command: |
+            # Your code here
+            curl -H "Content-Type: text/plain" -H "token: 31b97803-fd3d-4659-b2ec-e9c0af61db39" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
+
+     # Here's where you will add some code to rollback on failure
+
+  deploy-frontend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      # Checkout code from git
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+            cd frontend
+            pwd
+            npm i
+            npm run build
+      - run:
+          name: Get backend url
+          command: |
+            # your code here
+            export BACKEND_IP = $(aws cloudformation \
+              list-exports --query "Exports[?Name==\`backendIP\`].Value" \
+              --no-paginate --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            npm run build
+      - run:
+          name: Deploy frontend objects
+          command: |
+            # your code here
+            cd frontend
+            cat .env
+            ls -la
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}
+      # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations
+
+  deploy-backend:
+    docker:
+      # Docker image here that supports Ansible
+      - image: python:3.7-alpine3.11
+    steps:
+      # Checkout code from git
+      # Add ssh keys with fingerprint
+      # attach workspace
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["fe:61:cc:11:26:35:2d:e1:44:bf:76:5c:bd:51:b8:74"] # You can get this ID in the section where you registered the SSH Key
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible && apk add openssh # install the dependencies needed for your playbook
+      - run:
+          name: Fix host authenticity for inventory
+          command: |
+            var1=$(cat ~/inventory1.txt | awk 'NR==2')
+            echo $var1
+            ssh-keyscan $var1 >> ~/.ssh/known_hosts
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+      - run:
+          name: Deploy backend
+          command: |
+            # your code here
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            ansible-playbook -i ~/inventory1.txt deploy-backend.yml
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations
+
+      # Here's where you will add some code to rollback on failure
+
+
 workflows:
   # Name the workflow "welcome"
   welcome:
