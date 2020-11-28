@@ -153,15 +153,15 @@ jobs:
       - run:
           name: Fix host authenticity for inventory
           command: |
-            var=$(cat ~/inventory1.txt | awk 'NR==2')
-          # cat ipaddr.txt
-          # ssh-keyscan ipaddr.txt >> ~/.ssh/known_hosts
+            var1=$(cat ~/inventory1.txt | awk 'NR==2')
+            echo $var1
+            ssh-keyscan $var1 >> ~/.ssh/known_hosts
       - run:
           name: Configure server
           command: |
-            #cat ~/inventory1.txt
-            #ansible-playbook -i ~/inventory1.txt ~/project/.circleci/ansible/configure-server.yml
-            # Here's where you will add some code to rollback on failure
+            cat ~/inventory1.txt
+            ansible-playbook -i ~/inventory1.txt ~/project/.circleci/ansible/configure-server.yml
+          # Here's where you will add some code to rollback on failure
             exit 1
 
 
