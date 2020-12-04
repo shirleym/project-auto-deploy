@@ -228,10 +228,10 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            export BACKEND_IP = $(aws cloudformation \
+            BACKEND_IP = $(aws cloudformation \
               list-exports --query "Exports[?Name==\`backendIP\`].Value" \
               --no-paginate --output text)
-            export API_URL="http://${BACKEND_IP}:3030"
+            API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             npm run build
       - run:
