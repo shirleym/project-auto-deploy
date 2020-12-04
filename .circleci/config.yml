@@ -222,10 +222,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            cd frontend
-            pwd
-            npm i
-            npm run build
+            yum -y install nodejs
+            yum -y install tar gzip
       - run:
           name: Get backend url
           command: |
