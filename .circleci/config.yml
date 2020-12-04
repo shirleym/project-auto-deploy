@@ -232,7 +232,7 @@ jobs:
               list-exports --query "Exports[?Name==\`backendIP\`].Value" \
               --no-paginate --output text)
             API_URL=$("http://${BACKEND_IP}:3030")
-            echo "${API_URL}"
+            echo $API_URL
             npm run build
       - run:
           name: Deploy frontend objects
