@@ -231,7 +231,7 @@ jobs:
             BACKEND_IP=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`backendIP\`].Value" \
               --no-paginate --output text)
-            API_URL=$("http://${BACKEND_IP}:3030")
+            export API_URL="http://${BACKEND_IP}:3030"
             npm run build
       - run:
           name: Deploy frontend objects
