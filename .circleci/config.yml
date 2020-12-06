@@ -373,6 +373,10 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
+          name: Install dependencies
+          command: |
+            yum -y install tar
+      - run:
           name: Get old stack workflow id
           command: |
             OldWorkflowID =$(cat ~/OldWorkflowID.txt)
