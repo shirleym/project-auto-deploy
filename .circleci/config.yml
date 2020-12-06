@@ -335,10 +335,14 @@ jobs:
           command: |
             curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
             yum -y install nodejs
-            yum -y install tar gzip
+            yum -y install tar
+            yum -y install gzip
       - run:
           name: Update cloudfront distribution
           command: |
+            pwd
+            ls -la
+            ls -la .circleci/files
             aws cloudformation deploy \
               --template-file ".circleci/files/cloudfront.yml" \
               --stack-name udapeople-cloudfront \
