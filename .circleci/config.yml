@@ -376,16 +376,13 @@ jobs:
             yum -y install tar
             yum -y install gzip
       - attach_workspace:
-          at: ~/
+          at: ~/            
       - run:
-          name: Get old stack workflow id
+          name: Get old stack workflow id and Remove old stacks and files
           command: |
             OldWorkflowID=$(cat ~/OldWorkflowID.txt)
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
-      - run:
-          name: Remove old stacks and files
-          command: |
             if [[ ${CIRCLE_WORKFLOW_ID:0:7} =~ $OldWorkflowID ]]
             then
               echo OldWorkflowID: "$OldWorkflowID"
