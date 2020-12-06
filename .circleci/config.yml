@@ -330,7 +330,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       # Checkout code from git
-      - checkout 
+      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -339,6 +339,12 @@ jobs:
             yum -y install tar
             yum -y install gzip
       - run:
+          name: Get old stack workflow id
+          command: |
+            export OldWorkflowID=$(aws cloudformation \
+              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+              --no-paginate --output text)  >> ~/OldWorkflowID.txt
+      - run:
           name: Update cloudfront distribution
           command: |
             pwd
@@ -346,12 +352,16 @@ jobs:
             ls -la .circleci/files
             aws cloudformation deploy \
               --template-file ".circleci/files/cloudfront.yml" \
-              --stack-name udapeople-cloudfront \
+              --stack-name udapeoplecf \
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - OldWorkflowID.txt
 
   cleanup:
     docker:
@@ -360,12 +370,12 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: Get old stack workflow id
           command: |
-            export OldWorkflowID=$(aws cloudformation \
-              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-              --no-paginate --output text)
+            OldWorkflowID =$(cat ~/OldWorkflowID.txt)
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
       - run:
