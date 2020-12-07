@@ -428,15 +428,13 @@ workflows:
           requires: [test_frontend, test_backend, analyze_backend, analyze_frontend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
-      - deploy-backend:
-          requires: [configure-infrastructure]
       - run-migrations:
-          requires: [deploy-backend]
+          requires: [configure-infrastructure]
       - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
           requires: [run-migrations]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
           requires: [smoke-test]
-      - cleanup:
-          requires: [cloudfront-update]
