@@ -232,6 +232,7 @@ jobs:
               list-exports --query "Exports[?Name==\`backendIP\`].Value" \
               --no-paginate --output text)
             export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL=$API_URL" > frontend/.env
       - run:
           name: Deploy frontend objects
           command: |
