@@ -387,14 +387,14 @@ jobs:
             echo $OldWorkflowID
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
-            if [[ ${CIRCLE_WORKFLOW_ID:0:7} =~ $OldWorkflowID ] && ${#OldWorkflowID} > 0]
+            if [[ ${CIRCLE_WORKFLOW_ID:0:7} =~ ${OldWorkflowID} ]]
             then
               echo OldWorkflowID: "${OldWorkflowID}"
               echo Current Workflow Id: "${CIRCLE_WORKFLOW_ID:0:7}"
               echo "${STACKS[@]}"
               aws s3 rb s3://udapeople-$OldWorkflowID --force
-              aws cloudformation delete-stack --stack-name "udapeople-backend-$OldWorkflowID"
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-$OldWorkflowID"
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
             else
               echo "no destroy"
             fi
