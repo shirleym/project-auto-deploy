@@ -27,6 +27,13 @@
   shell: |
     cd /home/ubuntu/backend
     npm run build
+
+- name: "run migrations again"
+  become: true
+  shell: |
+    cd /home/ubuntu/backend
+    npm run migrations
+
 - name: Running backend service
   become: true
   shell: |
