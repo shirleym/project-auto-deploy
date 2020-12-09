@@ -233,10 +233,13 @@ jobs:
               --no-paginate --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL=$API_URL" > frontend/.env
+            echo "API_URL=$API_URL"
       - run:
           name: Deploy frontend objects
           command: |
             cd frontend
+            npm install
+            npm run build
             ls -la
             mkdir dist
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
