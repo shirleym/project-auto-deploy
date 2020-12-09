@@ -18,6 +18,8 @@
     global: yes
     production: yes
     state: present
+    update_cache: yes
+
 
 
 - name: "copy backend folder"
@@ -25,12 +27,16 @@
   copy:
     src: /root/project/backend
     dest: /home/ubuntu
-
 - name: Install Node Dependencies
   become: true
   shell: |
     cd /home/ubuntu/backend
     sudo npm install
+- name: Install Node Dependencies
+  become: true
+  shell: |
+    cd /home/ubuntu/backend
+    sudo npm audit fix --audit-level=critical --force
 - name: Building backend service
   become: true
   shell: |

@@ -28,3 +28,4 @@
     global: yes
     production: yes
     state: present
+    update_cache: yes
