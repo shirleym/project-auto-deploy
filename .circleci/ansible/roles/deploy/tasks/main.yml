@@ -30,21 +30,21 @@
   become: true
   shell: |
     cd /home/ubuntu/backend
-    npm install
+    sudo npm install
 - name: Building backend service
   become: true
   shell: |
     cd /home/ubuntu/backend
-    npm run build
+    sudo npm run build
 
 - name: "run migrations again"
   become: true
   shell: |
     cd /home/ubuntu/backend
-    npm run migrations
+    sudo npm run migrations
 
 - name: Running backend service
   become: true
   shell: |
     cd /home/ubuntu/backend
-    pm2 start npm --no-automation --name "backend" -- run start
+    sudo pm2 start npm --no-automation --name "backend" -- run start
