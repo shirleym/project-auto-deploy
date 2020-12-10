@@ -352,10 +352,10 @@ jobs:
               echo $OldWorkflowID >> ~/OldWorkflowID.txt
       - run:
           name: Update cloudfront distribution
+          no_output_timeout: 30m
           command: |
             pwd
             ls -la
-            ls -la .circleci/files
             aws cloudformation deploy \
               --template-file ".circleci/files/cloudfront.yml" \
               --stack-name udapeoplecf \
