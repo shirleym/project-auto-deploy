@@ -30,11 +30,6 @@
   shell: |
     cd /home/ubuntu/backend
     sudo npm install
-- name: Install Node Dependencies
-  become: true
-  shell: |
-    cd /home/ubuntu/backend
-    sudo npm install
 - name: Building backend service
   become: true
   shell: |
