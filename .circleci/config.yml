@@ -431,10 +431,10 @@ workflows:
             - build_frontend
       - analyze_frontend:
           requires:
-            - test_frontend
+            - build_frontend
       - analyze_backend:
           requires:
-            - test_backend
+            - build_backend
       - deploy-infrastructure:
           requires: [test_frontend, test_backend, analyze_backend, analyze_frontend]
           filters:
