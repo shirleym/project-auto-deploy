@@ -314,7 +314,13 @@ jobs:
             BACKEND_IP=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`backendIP\`].Value" \
               --no-paginate --output text)
-            curl "http://${BACKEND_IP}:3030/api/status"
+            if curl -s "http://${BACKEND_IP}:3030/api/status" | grep "Ok"
+            then
+              return 1
+            else
+              return 0
+            fi
+
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations
