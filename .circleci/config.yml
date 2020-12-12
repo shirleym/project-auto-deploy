@@ -314,7 +314,7 @@ jobs:
             BACKEND_IP=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`backendIP\`].Value" \
               --no-paginate --output text)
-            if curl -s "http://${BACKEND_IP}:3030/api/status" | grep "Ok"
+            if curl -s "http://${BACKEND_IP}:3030/api/status" | grep -o "Ok"
             then
               return 1
             else
