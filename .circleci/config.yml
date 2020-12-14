@@ -117,7 +117,7 @@ jobs:
             pwd
             npm i
             npm build
-            npm audit --audit-level=critical
+            npm audit --audit-level=critical --force
 
   deploy-infrastructure:
     docker:
@@ -219,6 +219,8 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
@@ -234,10 +236,12 @@ jobs:
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL=$API_URL" > frontend/.env
             echo "API_URL=$API_URL"
+            cat frontend/.env
       - run:
           name: Deploy frontend objects
           command: |
             cd frontend
+            cat .env
             npm install
             npm run build
             ls -la
