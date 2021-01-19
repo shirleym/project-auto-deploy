@@ -267,7 +267,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible && apk add openssh # install the dependencies needed for your playbook
+            apk add --update ansible && apk add openssh && apk add --update nodejs npm # install the dependencies needed for your playbook
       - run:
           name: Fix host authenticity for inventory
           command: |
