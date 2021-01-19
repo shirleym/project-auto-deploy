@@ -293,7 +293,6 @@ jobs:
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz .
-            sudo chmod 644 artifact.tar.gz
             cd .circleci/ansible
             cat ~/inventory1.txt
             ansible-playbook -i ~/inventory1.txt deploy-backend.yml
