@@ -20,32 +20,21 @@
     state: present
 
 
-- name: "copy backend folder"
-  become: true
-  copy:
-    src: /root/project/backend
-    dest: /home/ubuntu
-- name: Install Node Dependencies
-  become: true
-  shell: |
-    cd /home/ubuntu/backend
-    sudo npm install
+- name: "Create directory"
+  become_user: ubuntu
+  file:
+    path: ~/udapeople/
+    state: directory
 
+- name: "deploy backend"
+  become_user: ubuntu
+  unarchive:
+    src: artifact.tar.gz
+    dest: ~/udapeople/
 
-- name: Building backend service
-  become: true
+- name: "run backend"
+  become_user: ubuntu
   shell: |
-    cd /home/ubuntu/backend
-    sudo npm run build
-
-- name: "run migrations again"
-  become: true
-  shell: |
-    cd /home/ubuntu/backend
-    sudo npm run migrations
-
-- name: Running backend service
-  become: true
-  shell: |
-    cd /home/ubuntu/backend
-    sudo pm2 start npm --no-automation --name "backend" -- run start
+    cd ~/udapeople/
+    npm i
+    pm2 start npm -- run start
