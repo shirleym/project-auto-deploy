@@ -21,19 +21,19 @@
 
 
 - name: "Create directory"
-  become_user: ubuntu
+  become_user: true
   file:
     path: ~/udapeople/
     state: directory
 
 - name: "deploy backend"
-  become_user: ubuntu
+  become_user: true
   unarchive:
-    src: artifact.tar.gz
+    src: /home/ubuntu/artifact.tar.gz
     dest: ~/udapeople/
 
 - name: "run backend"
-  become_user: ubuntu
+  become_user: true
   shell: |
     cd ~/udapeople/
     npm i
