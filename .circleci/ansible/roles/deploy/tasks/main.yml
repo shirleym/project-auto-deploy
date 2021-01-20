@@ -26,10 +26,17 @@
     path: ~/udapeople/
     state: directory
 
+
+- name: "list backend"
+  become_user: true
+  shell: |
+    pwd
+    ls
+
 - name: "deploy backend"
   become_user: true
   unarchive:
-    src: /home/ubuntu/artifact.tar.gz
+    src: /root/project
     dest: ~/udapeople/
 
 - name: "run backend"
