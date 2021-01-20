@@ -27,16 +27,10 @@
     state: directory
 
 
-- name: "list backend"
-  become_user: true
-  shell: |
-    pwd
-    ls
-
 - name: "deploy backend"
   become_user: true
   unarchive:
-    src: /root/project
+    src: /etc/artifact.tar.gz
     dest: ~/udapeople/
 
 - name: "run backend"

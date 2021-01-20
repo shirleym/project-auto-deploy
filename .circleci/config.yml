@@ -291,10 +291,9 @@ jobs:
             cd backend
             npm i
             npm run build
+            tar -czvf /etc/artifact.tar.gz ./
+            chmod 644 /etc/artifact.tar.gz
             cd ..
-            pwd
-            tar -C backend -czvf artifact.tar.gz .
-            chmod 644 artifact.tar.gz
             cd .circleci/ansible
             cat ~/inventory1.txt
             ansible-playbook -i ~/inventory1.txt deploy-backend.yml
