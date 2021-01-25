@@ -196,16 +196,19 @@ jobs:
           at: ~/
       - run:
           name: Install dependencies
+          no_output_timeout: 30m
           command: |
             apk add --update ansible && apk add openssh # install the dependencies needed for your playbook
       - run:
           name: Fix host authenticity for inventory
+          no_output_timeout: 30m
           command: |
             var1=$(cat ~/project/.circleci/ansible/inventory.txt | awk 'NR==2')
             echo $var1
             ssh-keyscan $var1 >> ~/.ssh/known_hosts
       - run:
           name: Configure server
+          no_output_timeout: 30m
           command: |
             cd ~/project/.circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
@@ -218,7 +221,7 @@ jobs:
       # Checkout code from git
       - run:
           name: Run migrations
-          no_output_timeout: 10m
+          no_output_timeout: 30m
           command: |
             cd backend
             npm install
