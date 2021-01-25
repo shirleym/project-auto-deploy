@@ -293,7 +293,7 @@ jobs:
       - run:
           name: Fix host authenticity for inventory
           command: |
-            var1=$(cat ~/inventory1.txt | awk 'NR==2')
+            var1=$(cat ~/project/.circleci/ansible/inventory.txt | awk 'NR==2')
             echo $var1
             ssh-keyscan $var1 >> ~/.ssh/known_hosts
       - run:
@@ -319,7 +319,7 @@ jobs:
             cd ..
             cd .circleci/ansible
             cat ~/inventory1.txt
-            ansible-playbook -i ~/inventory1.txt deploy-backend.yml
+            ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations
