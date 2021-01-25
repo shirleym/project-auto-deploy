@@ -45,14 +45,17 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontendbuild]
+          keys:
+            - frontendbuild
       - run:
           command: |
             cd frontend
             npm install
             npm run build
       - save_cache:
-          paths: [frontend/node_modules]
+          paths:
+            - frontend/node_modules
+            - frontend/dist
           key: frontendbuild
 
   build_backend:
@@ -61,14 +64,17 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backendbuild]
+          keys:
+            - backendbuild
       - run:
           command: |
             cd backend
             npm i
             npm run build
       - save_cache:
-          paths: [backend/node_modules]
+          paths:
+            - backend/node_modules
+            - backend/dist
           key: backendbuild
 
   test_frontend:
@@ -77,7 +83,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontendbuild]
+          keys:
+            - frontendbuild
       - run:
           command: |
             mkdir /tmp/test-frontend
@@ -94,7 +101,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backendbuild]
+          keys:
+            - backendbuild
       - run:
           command: |
             mkdir /tmp/test-backend
@@ -111,7 +119,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backendbuild]
+          keys:
+            - backendbuild
       - run:
           command: |
             cd backend
@@ -123,7 +132,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontendbuild]
+          keys:
+            - frontendbuild
       - run:
           command: |
             cd frontend
