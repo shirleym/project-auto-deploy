@@ -318,7 +318,7 @@ jobs:
             echo "here"
             cd ..
             cd .circleci/ansible
-            cat ~/inventory1.txt
+            cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
