@@ -150,7 +150,6 @@ jobs:
       - run:
           name: Ensure back-end infrastructure exists
           command: |
-            pwd
             ls -la
             ls -la .circleci/files
             aws cloudformation deploy \
@@ -172,15 +171,14 @@ jobs:
           command: |
             pwd
             ls -la
-            echo "[web]" >>  ~/inventory1.txt
-            cat ~/inventory1.txt
+            cat .circleci/ansible/inventory.txt
             aws cloudformation \
               list-exports --query "Exports[?Name==\`backendIP\`].Value" \
-              --no-paginate --output text >> ~/inventory1.txt
+              --no-paginate --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
-            - inventory1.txt
+            - project/.circleci/ansible/inventory.txt
 
 
   configure-infrastructure:
@@ -209,8 +207,8 @@ jobs:
       - run:
           name: Configure server
           command: |
-            cat ~/inventory1.txt
-            ansible-playbook -i ~/inventory1.txt ~/project/.circleci/ansible/configure-server.yml
+            cd ~/project/.circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
 
   run-migrations:
     docker:
