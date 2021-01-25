@@ -201,7 +201,7 @@ jobs:
       - run:
           name: Fix host authenticity for inventory
           command: |
-            var1=$(cat ~/inventory1.txt | awk 'NR==2')
+            var1=$(cat ~/project/.circleci/ansible/inventory.txt | awk 'NR==2')
             echo $var1
             ssh-keyscan $var1 >> ~/.ssh/known_hosts
       - run:
