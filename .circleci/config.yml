@@ -76,29 +76,30 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - restore_cache:
+          keys: [frontend_build]
       - run:
           command: |
             mkdir /tmp/test-frontend
             cd frontend
-            pwd
             npm i
-            npm build
             npm run test
       # Upload test results
       - store_test_results:
           path: /tmp/test-frontend
+
   test_backend:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - restore_cache:
+          keys: [backend_build]
       - run:
           command: |
             mkdir /tmp/test-backend
             cd backend
-            pwd
             npm i
-            npm build
             npm run test
       # Upload test results
       - store_test_results:
@@ -109,24 +110,23 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - restore_cache:
+          keys: [backend_build]
       - run:
           command: |
             cd backend
-            pwd
-            npm i
-            npm build
             npm audit fix --audit-level=critical --force
+
   analyze_frontend:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - restore_cache:
+          keys: [frontend_build]
       - run:
           command: |
             cd frontend
-            pwd
-            npm i
-            npm build
             npm audit --audit-level=critical --force
 
   deploy-infrastructure:
